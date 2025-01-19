@@ -24,6 +24,16 @@ void Shader::Use() const
 	glUseProgram(m_ID);
 }
 
+void Shader::SetUniform(GLuint x, GLuint y, GLuint id) const
+{
+	glUniform2i(id, x, y);
+}
+
+GLuint Shader::GetUniform(const std::string& name) const
+{
+	return glGetUniformLocation(m_ID, name.c_str());
+}
+
 GLuint Shader::CompileShader(const std::string& path, GLenum type)
 {
 	auto shader = glCreateShader(type);

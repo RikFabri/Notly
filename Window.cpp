@@ -116,6 +116,9 @@ void Window::CreateShader()
 	stbi_image_free(data);
 
 
+	// In your code load your shaders, link your program and call:
+	m_WindowSizeUniform = m_pShader->GetUniform("WindowSize");
+
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -175,6 +178,7 @@ void Window::TestStuff()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	m_pShader->Use();
+	m_pShader->SetUniform(w, h, m_WindowSizeUniform);
 
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_SSBO);
 	glBindTexture(GL_TEXTURE_2D, m_texture);

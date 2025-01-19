@@ -23,6 +23,7 @@ private:
 	unsigned int m_VAO;
 	unsigned int m_texture;
 	unsigned int m_SSBO;
+	unsigned int m_WindowSizeUniform;
 
 	std::unique_ptr<Shader> m_pShader = nullptr;
 

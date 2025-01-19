@@ -8,23 +8,12 @@ layout (std430, binding = 1) buffer TextBuffer {
 in vec2 TexCoord;
 
 uniform sampler2D fontAtlas;
-
-//vec3 indexToColor(uint index) {
-//    return vec3(mod(float(index), 1.0), mod(float(index) * 0.5, 1.0), mod(float(index) * 0.25, 1.0));
-//}
+uniform ivec2 WindowSize;
 
 vec3 indexToColor(uint index, uint total) {
     float normalizedIndex = float(index) / float(total);
     return vec3(normalizedIndex, 1.0 - normalizedIndex, 0.5);
 }
-
-//vec3 indexToColor(uint index) {
-//    return vec3(
-//        mod(float(index), 256.0),            // Red channel
-//        mod(float(index) * 1.5, 256.0),      // Green channel
-//        mod(float(index) * 2.5, 256.0)       // Blue channel
-//    );
-//}
 
 void main()
 {
@@ -36,11 +25,16 @@ void main()
     uint atlasNumCharsVertical = atlasSize / atlasCharSizeV;
 
     // Viewport data
-    uint viewportWidth = 2000;
-    uint viewportHeight = 512;
+    uint viewportWidth = WindowSize.x;
+    uint viewportHeight = WindowSize.y;
 
-    uint viewportCharWidth = atlasCharSizeH;
-    uint viewportCharHeight = atlasCharSizeV;
+    //    uint viewportCharWidth = atlasCharSizeH;  // These can be uniforms for font scaling
+    //    uint viewportCharHeight = atlasCharSizeV; // These can be uniforms for font scaling
+    uint viewportCharWidth = 18;
+    uint viewportCharHeight = 20;
+
+    viewportWidth = viewportWidth - viewportWidth % viewportCharWidth;
+    viewportHeight = viewportHeight - viewportHeight % viewportCharHeight;
 
     ivec2 viewportGlyphDimensions = ivec2(viewportCharWidth, viewportCharHeight);
     ivec2 atlasGlyphDimensions = ivec2(atlasCharSizeH, atlasCharSizeV);

@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="stbi_image.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

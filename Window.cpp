@@ -19,7 +19,7 @@ Window::Window()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // Enable double buffering
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);  // Depth buffer size
 
-	m_pWindow = SDL_CreateWindow("Notly", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 480, 512, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+	m_pWindow = SDL_CreateWindow("Notly", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 480, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
 	if (m_pWindow == nullptr)
 	{
@@ -104,7 +104,7 @@ void Window::CreateShader()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	stbi_set_flip_vertically_on_load(true);
 	int w, h, channels;
-	unsigned char* data = stbi_load("MonospaceAtlas.png", &w, &h, &channels, 0);
+	unsigned char* data = stbi_load("MonospaceAtlas1.png", &w, &h, &channels, 0);
 	if (!data)
 	{
 		SDL_Log("failed to load atlas");
@@ -167,7 +167,10 @@ void Window::TestStuff()
 	SDL_GetWindowSize(m_pWindow, &w, &h);
 
 
-	//glViewport(0, 0, w, h / 2);
+	// 16, 32
+	//w = w - w % 16;
+	//h = h - h % 32;
+	glViewport(0, 0, w, h);
 	glClearColor(0.2f, 0.3f, 0.3f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT);
 

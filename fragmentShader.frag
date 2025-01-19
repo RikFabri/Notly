@@ -28,25 +28,29 @@ vec3 indexToColor(uint index, uint total) {
 
 void main()
 {
-    // Viewport data
-    uint viewportWidth = 480;
-    uint viewportHeight = 512;
-    uint viewportCharWidth = 32;
+    // Monospace atlas data
+    uint atlasSize = 512;
+    uint atlasCharSizeH = 16;
+    uint atlasCharSizeV = 32;
+    uint atlasNumCharsHorizontal = atlasSize / atlasCharSizeH;
+    uint atlasNumCharsVertical = atlasSize / atlasCharSizeV;
 
-    uint viewportCharHeight = viewportCharWidth;
+    // Viewport data
+    uint viewportWidth = 2000;
+    uint viewportHeight = 512;
+
+    uint viewportCharWidth = atlasCharSizeH;
+    uint viewportCharHeight = atlasCharSizeV;
+
+    ivec2 viewportGlyphDimensions = ivec2(viewportCharWidth, viewportCharHeight);
+    ivec2 atlasGlyphDimensions = ivec2(atlasCharSizeH, atlasCharSizeV);
+
     uint viewportNumCharsH = viewportWidth / viewportCharWidth;
     uint viewportNumCharsV = viewportHeight / viewportCharHeight;
-
 
     vec2 viewportDimensions = vec2(viewportWidth, viewportHeight);
 
     ivec2 texCoordsViewport = ivec2(floor(TexCoord * viewportDimensions)); // absolute pixels
-
-    // Monospace atlas data
-    uint atlasSize = 512;
-    uint atlasNumChars = 16; // per dimension
-    // uint atlasCharSize = atlasSize / atlasNumChars; // should be 32
-    uint atlasCharSize = 32;
 
     // Which character are we rendering
     // texCoordsViewport origin is bottom left, but index starts top left, thus invert y-axis
@@ -55,22 +59,19 @@ void main()
     uint currentChar = chars[index];
 
     // Where is this character's origin in the atlas?
-    uint horizontalIdxTL = currentChar % atlasNumChars;
-    uint verticalIdxTl = currentChar / atlasNumChars;
+    uint horizontalIdxTL = currentChar % atlasNumCharsHorizontal;
+    uint verticalIdxTl = currentChar / atlasNumCharsHorizontal;
 
     // Convert indices into atlas space coordinates BL
-    uint characterPosX = horizontalIdxTL * atlasCharSize;
-    uint characterPosY = atlasSize - (verticalIdxTl * atlasCharSize + atlasCharSize);
+    uint characterPosX = horizontalIdxTL * atlasCharSizeH;
+    uint characterPosY = atlasSize - (verticalIdxTl * atlasCharSizeV + atlasCharSizeV);
     vec2 characterOriginAtlasSpace = vec2(characterPosX, characterPosY);
-
-
-    // Here be dragons
 
     // Which pixel within our character do we need to render
     vec2 offsetFromCharOrigin = texCoordsViewport; // absolute pixels in viewport space
     offsetFromCharOrigin.x = texCoordsViewport.x % viewportCharWidth;
     offsetFromCharOrigin.y = texCoordsViewport.y % viewportCharHeight;
-    offsetFromCharOrigin = (offsetFromCharOrigin / viewportDimensions) * float(atlasSize);
+    offsetFromCharOrigin = (offsetFromCharOrigin / viewportGlyphDimensions) * atlasGlyphDimensions;
 
     FragColor = texture(fontAtlas, (characterOriginAtlasSpace + offsetFromCharOrigin) / atlasSize);
 

@@ -26,7 +26,7 @@ private:
 
 	std::unique_ptr<Shader> m_pShader = nullptr;
 
-	std::string m_TextBuffer = "Hello world!";
+	std::string m_TextBuffer = "Hello world! Lorem ipsum dolor sit ames constectetur adipiscin elit. (from memory!)";
 	//std::string m_TextBuffer = "☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§";
 	//std::vector<GLuint> m_TextBufferConverted = {0, 1, 16, 17, 32, 33, 64, 65};
 	std::vector<GLuint> m_TextBufferConverted;

@@ -67,9 +67,9 @@ int Window::StartExecution()
 			{
 				quit = true;
 			}
-		}
+			TestStuff();
 
-		TestStuff();
+		}
 	}
 
 	return 0;
@@ -100,8 +100,8 @@ void Window::CreateShader()
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	stbi_set_flip_vertically_on_load(true);
 	int w, h, channels;
 	unsigned char* data = stbi_load("MonospaceAtlas1.png", &w, &h, &channels, 0);
@@ -180,8 +180,8 @@ void Window::TestStuff()
 	m_pShader->Use();
 	m_pShader->SetUniform(w, h, m_WindowSizeUniform);
 
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_SSBO);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
+	//glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_SSBO);
+	//glBindTexture(GL_TEXTURE_2D, m_texture);
 	glBindVertexArray(m_VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 

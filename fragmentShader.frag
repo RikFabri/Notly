@@ -30,8 +30,8 @@ void main()
 
     //    uint viewportCharWidth = atlasCharSizeH;  // These can be uniforms for font scaling
     //    uint viewportCharHeight = atlasCharSizeV; // These can be uniforms for font scaling
-    uint viewportCharWidth = 18;
-    uint viewportCharHeight = 20;
+    uint viewportCharWidth = 16;
+    uint viewportCharHeight = 32;
 
     viewportWidth = viewportWidth - viewportWidth % viewportCharWidth;
     viewportHeight = viewportHeight - viewportHeight % viewportCharHeight;

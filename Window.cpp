@@ -3,6 +3,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stbi_image.h"
 #include "Shader.h"
+#include "Frame.h"
+#include "FileExplorer.h"
 
 Window::Window()
 {
@@ -41,6 +43,8 @@ Window::Window()
 	SDL_Log("OpenGL Version: %s\n", glGetString(GL_VERSION));
 
 	CreateShader();
+
+	m_Frames.emplace_back(new FileExplorer());
 }
 
 Window::~Window()
@@ -67,7 +71,7 @@ int Window::StartExecution()
 			{
 				quit = true;
 			}
-			TestStuff();
+			Draw();
 
 		}
 	}
@@ -77,6 +81,40 @@ int Window::StartExecution()
 
 #include <iostream>
 
+void Window::Draw()
+{
+	int w, h;
+	SDL_GetWindowSize(m_pWindow, &w, &h);
+
+	glClearColor(0.2f, 0.3f, 0.3f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+
+	// Temporary hack to split screen in two.
+	const auto offset = w / 5;
+	RenderArea renderArea{ 0, 0, offset, h };
+	//RenderArea renderArea{ 0, 0, w, h };
+
+	for (auto* it : m_Frames)
+	{
+		it->Draw(renderArea);
+
+	}
+	renderArea.x += offset;
+	renderArea.width = w - offset;
+
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, m_TextBufferConverted.size() * sizeof(GLuint), &m_TextBufferConverted[0], GL_DYNAMIC_DRAW);
+
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_SSBO);
+
+
+	TempDrawTextWindow(renderArea);
+
+	SDL_GL_SwapWindow(m_pWindow);
+
+}
+
 void Window::CreateShader()
 {
 	m_pShader = std::make_unique<Shader>("vertexShader.vert", "fragmentShader.frag");
@@ -85,7 +123,7 @@ void Window::CreateShader()
 	for (const auto& ch : m_TextBuffer)
 	{
 		m_TextBufferConverted.emplace_back(ch);
-		std::cout << GLuint(ch) << std::endl;
+		//std::cout << GLuint(ch) << std::endl;
 	}
 	glGenBuffers(1, &m_SSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
@@ -164,21 +202,15 @@ void Window::CreateShader()
 	glBindVertexArray(0);
 }
 
-void Window::TestStuff()
+void Window::TempDrawTextWindow(const RenderArea& renderArea)
 {
-	int w, h;
-	SDL_GetWindowSize(m_pWindow, &w, &h);
-
-
 	// 16, 32
 	//w = w - w % 16;
 	//h = h - h % 32;
-	glViewport(0, 0, w, h);
-	glClearColor(0.2f, 0.3f, 0.3f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glViewport(renderArea.x, renderArea.y, renderArea.width, renderArea.height);
 
 	m_pShader->Use();
-	m_pShader->SetUniform(w, h, m_WindowSizeUniform);
+	m_pShader->SetUniform(renderArea.width, renderArea.height, m_WindowSizeUniform);
 
 	//glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_SSBO);
 	//glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -188,6 +220,9 @@ void Window::TestStuff()
 	//glClearColor(0.f, 0.f, 0.f, 1.f);
 	//glViewport(0, h / 2, w, h / 2);
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
 
-	SDL_GL_SwapWindow(m_pWindow);
+void Window::TestStuff()
+{
+
 }

@@ -3,6 +3,7 @@
 #include <vector>
 #include "SDL.h"
 #include "Shader.h"
+#include "Frame.h"
 
 class Window
 {
@@ -13,7 +14,10 @@ public:
 	int StartExecution();
 
 private:
+	void Draw();
+
 	void CreateShader();
+	void TempDrawTextWindow(const RenderArea& renderArea);
 	void TestStuff();
 
 	SDL_Window* m_pWindow = nullptr;
@@ -31,5 +35,7 @@ private:
 	//std::string m_TextBuffer = "☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§";
 	//std::vector<GLuint> m_TextBufferConverted = {0, 1, 16, 17, 32, 33, 64, 65};
 	std::vector<GLuint> m_TextBufferConverted;
+
+	std::vector<IFrame*> m_Frames;
 };
 

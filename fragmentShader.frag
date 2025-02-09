@@ -30,8 +30,8 @@ void main()
 
     //    uint viewportCharWidth = atlasCharSizeH;  // These can be uniforms for font scaling
     //    uint viewportCharHeight = atlasCharSizeV; // These can be uniforms for font scaling
-    uint viewportCharWidth = 16;
-    uint viewportCharHeight = 32;
+    uint viewportCharWidth = 10;
+    uint viewportCharHeight = 20;
 
     viewportWidth = viewportWidth - viewportWidth % viewportCharWidth;
     viewportHeight = viewportHeight - viewportHeight % viewportCharHeight;
@@ -71,5 +71,7 @@ void main()
 
     // FragColor = vec4(indexToColor(uint(characterPosY), 512), 1.0);
     //FragColor = vec4(offsetFromCharOrigin, 1.0, 1.0);
+
+    // FragColor = vec4(TexCoord, 1.0, 1.0);
     
 }
